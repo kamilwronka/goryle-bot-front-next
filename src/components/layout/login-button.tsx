@@ -5,13 +5,19 @@ import { getServerSession } from "next-auth";
 import Link from "next/link";
 
 export const LoginButton = async () => {
-  const session = await getServerSession();
+  //   const session = await getServerSession();
 
-  return session ? (
-    <Button>
-      <Link href="/api/auth/signin">Wyloguj się</Link>
-    </Button>
-  ) : (
+  //   return session ? (
+  //     <Button>
+  //       <Link href="/api/auth/signin">Wyloguj się</Link>
+  //     </Button>
+  //   ) : (
+  //     <Button>
+  //       <Link href="/api/auth/signin">Zaloguj się</Link>
+  //     </Button>
+  //   );
+
+  return (
     <Button>
       <Link href="/api/auth/signin">Zaloguj się</Link>
     </Button>
