@@ -12,33 +12,29 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Plus } from "lucide-react";
-import { getServerSession } from "next-auth";
 
-export const AddReservationButton = async () => {
+export const AddReservationButton = () => {
   return (
-    <>
-      <Drawer>
-        <DrawerTrigger>
-          {" "}
-          <div className="fixed bottom-12 right-12">
-            <div className="bg-cyan-700 hover:bg-cyan-600 transition w-12 h-12 rounded-[50%] flex justify-center items-center border cursor-pointer">
-              <Plus />
-            </div>
+    <Drawer>
+      <DrawerTrigger>
+        <div className="fixed bottom-12 right-12">
+          <div className="bg-cyan-700 hover:bg-cyan-600 transition w-12 h-12 rounded-[50%] flex justify-center items-center border cursor-pointer">
+            <Plus />
           </div>
-        </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-            <DrawerDescription>This action cannot be undone.</DrawerDescription>
-          </DrawerHeader>
-          <DrawerFooter>
-            <Button>Submit</Button>
-            <DrawerClose>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    </>
+        </div>
+      </DrawerTrigger>
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+          <DrawerDescription>This action cannot be undone.</DrawerDescription>
+        </DrawerHeader>
+        <DrawerFooter>
+          <Button>Submit</Button>
+          <DrawerClose>
+            <Button variant="outline">Cancel</Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 };
