@@ -2,7 +2,7 @@ import {
   Reservation,
   fetchReservationsData,
 } from "@/app/actions/fetch-reservations-data";
-import { ReservationsTab } from "@/app/reservations/[id]/components/reservations-tab";
+import { ReservationsTab } from "@/app/guilds/[id]/components/reservations-tab";
 import { AppNavigation } from "@/components/layout/app-navigation";
 import { Metadata } from "next";
 
@@ -32,3 +32,8 @@ export default async function Reservations({ params: { id } }: PageProps) {
     </div>
   );
 }
+
+Reservations.auth = {
+  loading: "loading",
+  unauthorized: "/login-with-different-user", // redirect to this url
+};

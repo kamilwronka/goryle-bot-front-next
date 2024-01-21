@@ -1,10 +1,8 @@
 "use server";
 
-import { EXP_SORT_ORDER } from "@/app/config/exp-sort-order";
 import { getServerSessionWithConfig } from "@/lib/get-server-session-with-config";
 import mongoClient from "@/lib/mongodb";
-import { groupBy } from "lodash";
-import { getToken } from "next-auth/jwt";
+import { parseTimestampToDate } from "@/lib/parse-timestamp-to-date";
 
 export type Reservation = {
   _id: string;
@@ -18,10 +16,16 @@ export type Reservation = {
   username?: string;
 };
 
-export async function fetchReservationsData(
+export async function fetchUserReservations(
   id: string,
   exp?: string
-): Promise<string> {
+): Promise<Reservation[]> {
+  const session = await getServerSessionWithConfig();
+
+  if (!session) {
+    return [];
+  }
+
   try {
     const client = await mongoClient;
     const now = Date.now();
@@ -32,19 +36,28 @@ export async function fetchReservationsData(
     const collection = await db.collection("expreservations");
     const result = (await collection
       .find({
-        guildId: id,
+        userId: id,
         dateFrom: { $gte: desiredDate },
         ...(exp ? { exp } : {}),
       })
       .sort({ dateFrom: 1 })
       .toArray()) as unknown as Reservation[];
 
-    const sortedReservations = result.sort(
-      (a, b) => EXP_SORT_ORDER.indexOf(a.exp) - EXP_SORT_ORDER.indexOf(b.exp)
-    );
-    const groups = groupBy(sortedReservations, "exp");
+    const parsedResult = result.map((reservation) => {
+      const id = reservation._id.toString();
+      const from = parseTimestampToDate(reservation.dateFrom);
+      const to = parseTimestampToDate(reservation.dateTo);
 
-    return JSON.stringify(groups);
+      return {
+        ...reservation,
+        _id: id,
+        dateFrom: from,
+        dateTo: to,
+      };
+    });
+
+    return parsedResult as unknown as Reservation[];
+    // return result;
   } catch (error) {
     throw error;
   }

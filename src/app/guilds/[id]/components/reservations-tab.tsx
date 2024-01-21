@@ -15,7 +15,7 @@ type Props = {
 
 export const ReservationsTab: React.FC<Props> = ({ expKey, guildId }) => {
   return (
-    <Link href={`/reservations/${guildId}/exp/${expKey}`}>
+    <Link href={`/guilds/${guildId}/exp/${expKey}`}>
       <Card className="w-96 flex justify-center py-4 hover:bg-secondary/70 bg-muted cursor-pointer transition">
         <CardHeader>
           <CardTitle>{expKey}</CardTitle>

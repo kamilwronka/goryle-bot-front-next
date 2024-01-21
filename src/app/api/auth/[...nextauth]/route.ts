@@ -1,14 +1,5 @@
+import { authOptions } from "@/app/config/auth-options";
 import NextAuth from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
-
-const authOptions = {
-  providers: [
-    DiscordProvider({
-      clientId: process.env.DISCORD_CLIENT_ID,
-      clientSecret: process.env.DISCORD_CLIENT_SECRET,
-    }),
-  ],
-};
 
 const handler = NextAuth(authOptions);
 

@@ -1,11 +1,14 @@
+"use client";
+
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import { AppNavigation } from "@/components/layout/app-navigation";
 
 import "@/styles/globals.css";
 import { AddReservationButton } from "@/components/layout/add-reservation-button";
 import { Toaster } from "@/components/ui/sonner";
+import { SessionProvider } from "next-auth/react";
+import { ReservationForm } from "@/components/common/reservation-form";
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -31,9 +34,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-          <AddReservationButton />
-          <Toaster />
+          <SessionProvider>
+            {children}
+            <AddReservationButton />
+            <Toaster />
+            <ReservationForm />
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>
