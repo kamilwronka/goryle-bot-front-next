@@ -26,7 +26,7 @@ export default async function Home() {
   const session = await getServerSessionWithConfig();
   const guilds = await fetchEligibleUserGuilds();
 
-  const reservations = await fetchUserReservations("444192791170646046");
+  const reservations = await fetchUserReservations(session?.user?.id as string);
 
   return (
     <main>
@@ -69,32 +69,40 @@ export default async function Home() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {reservations.map(
-                  ({
-                    _id,
-                    dateFrom,
-                    dateTo,
-                    objective,
-                    guildId,
-                    username,
-                    exp,
-                  }) => {
-                    return (
-                      <TableRow key={_id}>
-                        <TableCell>{guildId}</TableCell>
-                        <TableCell>{username}</TableCell>
-                        <TableCell>{exp}</TableCell>
-                        <TableCell>{dateFrom}</TableCell>
-                        <TableCell>{dateTo}</TableCell>
-                        <TableCell>{objective}</TableCell>
-                        <TableCell className="flex gap-2 justify-end">
-                          <EditReservationButton id={_id} />
-                          <DeleteReservationButton id={_id} />
-                        </TableCell>
-                      </TableRow>
-                    );
-                  }
+                {reservations.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center">
+                      Brak rezerwacji
+                    </TableCell>
+                  </TableRow>
                 )}
+                {reservations.length > 0 &&
+                  reservations.map(
+                    ({
+                      _id,
+                      dateFrom,
+                      dateTo,
+                      objective,
+                      guildId,
+                      username,
+                      exp,
+                    }) => {
+                      return (
+                        <TableRow key={_id}>
+                          <TableCell>{guildId}</TableCell>
+                          <TableCell>{username}</TableCell>
+                          <TableCell>{exp}</TableCell>
+                          <TableCell>{dateFrom}</TableCell>
+                          <TableCell>{dateTo}</TableCell>
+                          <TableCell>{objective}</TableCell>
+                          <TableCell className="flex gap-2 justify-end">
+                            <EditReservationButton id={_id} />
+                            <DeleteReservationButton id={_id} />
+                          </TableCell>
+                        </TableRow>
+                      );
+                    }
+                  )}
               </TableBody>
             </Table>
           </section>
