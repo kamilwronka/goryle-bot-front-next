@@ -1,5 +1,6 @@
 "use client";
 
+import { ReservationForm } from "@/components/common/reservation-form";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -23,16 +24,20 @@ export const AddReservationButton = () => {
           </div>
         </div>
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent className="px-8 pb-8">
         <DrawerHeader>
-          <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-          <DrawerDescription>This action cannot be undone.</DrawerDescription>
+          <DrawerTitle>
+            Tworzenie nowej rezerwacji - jeszcze nic nie robi
+          </DrawerTitle>
         </DrawerHeader>
-        <DrawerFooter>
-          <Button>Submit</Button>
-          <DrawerClose>
-            <Button variant="outline">Cancel</Button>
+        <ReservationForm />
+        <DrawerFooter className="p-0 flex flex-row items-center w-full justify-center mt-8">
+          <DrawerClose asChild>
+            <Button className="w-36" variant="outline">
+              Anuluj
+            </Button>
           </DrawerClose>
+          <Button className="w-36">Utwórz</Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

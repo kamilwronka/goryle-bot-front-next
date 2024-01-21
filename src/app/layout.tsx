@@ -38,7 +38,6 @@ export default function RootLayout({
             {children}
             <AddReservationButton />
             <Toaster />
-            <ReservationForm />
           </SessionProvider>
         </ThemeProvider>
       </body>

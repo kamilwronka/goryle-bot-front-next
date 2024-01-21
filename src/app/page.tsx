@@ -33,7 +33,7 @@ export default async function Home() {
       <AppNavigation title={metadata.title as string} />
       {session && (
         <>
-          <section className="px-8 mt-8 w-[100vw]">
+          <section className="px-8 mt-8 w-full max-w-screen-2xl">
             <h2 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-xl">
               Serwery
             </h2>
@@ -54,13 +54,12 @@ export default async function Home() {
           </section>
           <section className="p-8">
             <h2 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-xl">
-              Rezerwacje
+              Twoje rezerwacje
             </h2>
             <Table className="mt-8 border">
               <TableHeader>
                 <TableRow className="bg-secondary">
                   <TableHead className="w-36 min-w-24">Discord</TableHead>
-                  <TableHead className="w-36 min-w-24">Użytkownik</TableHead>
                   <TableHead className="w-36 min-w-24">Exp</TableHead>
                   <TableHead className="w-48 min-w-48">Od</TableHead>
                   <TableHead className="w-48 min-w-48">Do</TableHead>
@@ -78,19 +77,10 @@ export default async function Home() {
                 )}
                 {reservations.length > 0 &&
                   reservations.map(
-                    ({
-                      _id,
-                      dateFrom,
-                      dateTo,
-                      objective,
-                      guildId,
-                      username,
-                      exp,
-                    }) => {
+                    ({ _id, dateFrom, dateTo, objective, guildId, exp }) => {
                       return (
                         <TableRow key={_id}>
                           <TableCell>{guildId}</TableCell>
-                          <TableCell>{username}</TableCell>
                           <TableCell>{exp}</TableCell>
                           <TableCell>{dateFrom}</TableCell>
                           <TableCell>{dateTo}</TableCell>
