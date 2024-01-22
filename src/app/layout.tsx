@@ -1,6 +1,8 @@
 "use client";
 
 import { Inter as FontSans } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 
@@ -28,6 +30,8 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
+        <Analytics />
+        <SpeedInsights />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
