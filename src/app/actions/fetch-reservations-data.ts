@@ -1,10 +1,9 @@
 "use server";
 
 import { EXP_SORT_ORDER } from "@/app/config/exp-sort-order";
-import { getServerSessionWithConfig } from "@/lib/get-server-session-with-config";
 import mongoClient from "@/lib/mongodb";
+import { parseTimestampToDate } from "@/lib/parse-timestamp-to-date";
 import { groupBy } from "lodash";
-import { getToken } from "next-auth/jwt";
 
 export type Reservation = {
   _id: string;
@@ -39,7 +38,20 @@ export async function fetchReservationsData(
       .sort({ dateFrom: 1 })
       .toArray()) as unknown as Reservation[];
 
-    const sortedReservations = result.sort(
+    const parsedResult = result.map((reservation) => {
+      const id = reservation._id.toString();
+      const from = parseTimestampToDate(reservation.dateFrom);
+      const to = parseTimestampToDate(reservation.dateTo);
+
+      return {
+        ...reservation,
+        _id: id,
+        dateFrom: from,
+        dateTo: to,
+      };
+    });
+
+    const sortedReservations = parsedResult.sort(
       (a, b) => EXP_SORT_ORDER.indexOf(a.exp) - EXP_SORT_ORDER.indexOf(b.exp)
     );
     const groups = groupBy(sortedReservations, "exp");

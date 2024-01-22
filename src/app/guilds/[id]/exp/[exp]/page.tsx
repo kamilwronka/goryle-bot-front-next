@@ -2,11 +2,9 @@ import {
   Reservation,
   fetchReservationsData,
 } from "@/app/actions/fetch-reservations-data";
-import { Timetable } from "@/app/guilds/[id]/exp/[exp]/components/timetable";
+import { ReservationsTable } from "@/components/common/reservations-table";
 import { AppNavigation } from "@/components/layout/app-navigation";
-import { ArrowLeft } from "lucide-react";
 import { Metadata } from "next";
-import Link from "next/link";
 
 type Params = {
   params: {
@@ -28,12 +26,20 @@ export default async function Reservations({ params: { id, exp } }: Params) {
   return (
     <main>
       <AppNavigation title={metadata.title as string} />
-      <div className="row items-center justify-start p-8">
-        <h2 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-2xl">
-          {expName}
-        </h2>
-        <div className="mt-8">
-          <Timetable data={data[expName]} name={expName} />
+      <div className="flex items-center justify-center w-full">
+        <div className="row p-8 w-full max-w-screen-2xl flex flex-col">
+          <div className="w-full">
+            <h2 className="scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-2xl">
+              {expName}
+            </h2>
+          </div>
+          <div className="w-full">
+            <ReservationsTable
+              reservations={data[expName]}
+              columns={["username", "from", "to", "purpose"]}
+              highlightOwnRecords
+            />
+          </div>
         </div>
       </div>
     </main>

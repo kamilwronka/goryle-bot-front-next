@@ -1,3 +1,5 @@
+"use client";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,12 +15,17 @@ import { Trash } from "lucide-react";
 
 type Props = {
   id: string;
+  onDelete: (id: string) => void;
 };
 
-export const DeleteReservationButton: React.FC<Props> = ({ id }) => {
+export const DeleteReservationButton: React.FC<Props> = ({ id, onDelete }) => {
+  const handleReservationDelete = async () => {
+    onDelete(id);
+  };
+
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
+      <AlertDialogTrigger asChild>
         <ButtonWithTooltip
           variant="outline"
           size="icon"
@@ -36,7 +43,9 @@ export const DeleteReservationButton: React.FC<Props> = ({ id }) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Anuluj</AlertDialogCancel>
-          <AlertDialogAction>Usuń</AlertDialogAction>
+          <AlertDialogAction onClick={handleReservationDelete}>
+            Usuń
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
