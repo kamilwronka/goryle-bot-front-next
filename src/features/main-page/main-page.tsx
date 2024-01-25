@@ -13,7 +13,6 @@ import { UserGuilds } from "@/features/main-page/components/user-guilds";
 
 export const MainPage = async () => {
   const session = await getServerSessionWithConfig();
-  const guilds = await fetchUserGuilds({ eligible: true });
 
   const reservations = await fetchUserReservations(session?.user?.id as string);
   const parsedReservations = JSON.parse(reservations) as Reservation[];

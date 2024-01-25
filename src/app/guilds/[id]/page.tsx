@@ -30,8 +30,3 @@ export default async function Reservations({ params: { id } }: PageProps) {
     </div>
   );
 }
-
-Reservations.auth = {
-  loading: "loading",
-  unauthorized: "/login-with-different-user", // redirect to this url
-};
