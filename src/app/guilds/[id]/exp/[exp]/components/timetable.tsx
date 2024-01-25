@@ -1,6 +1,6 @@
 "use client";
 
-import { Reservation } from "@/app/actions/fetch-reservations-data";
+import { Reservation } from "@/actions/fetch-reservations-data";
 import { Card } from "@/components/ui/card";
 import {
   Table,

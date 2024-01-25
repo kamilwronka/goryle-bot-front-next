@@ -1,7 +1,6 @@
 "use client";
 
-import { deleteReservation } from "@/app/actions/delete-reservation";
-import { Reservation } from "@/app/actions/fetch-reservations-data";
+import { deleteReservation } from "@/actions/delete-reservation";
 import { DeleteReservationButton } from "@/components/common/delete-reservation-button";
 import { EditReservationButton } from "@/components/common/edit-reservation-button";
 import {
@@ -13,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { Reservation } from "@/models/reservation";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
@@ -40,6 +40,8 @@ export const ReservationsTable: React.FC<Props> = ({
 
     await deleteReservation(id);
   };
+
+  console.log(reservations);
 
   const renderHead = (column: Column) => {
     switch (column) {
@@ -85,7 +87,7 @@ export const ReservationsTable: React.FC<Props> = ({
   };
 
   const renderRow = (column: Column, reservation: Reservation) => {
-    const { guildId, exp, dateFrom, dateTo, objective, username } = reservation;
+    const { guildId, exp, dateFrom, dateTo, purpose, username } = reservation;
 
     switch (column) {
       case "discord":
@@ -97,7 +99,7 @@ export const ReservationsTable: React.FC<Props> = ({
       case "to":
         return <TableCell key={column}>{dateTo}</TableCell>;
       case "purpose":
-        return <TableCell key={column}>{objective}</TableCell>;
+        return <TableCell key={column}>{purpose}</TableCell>;
       case "username":
         return <TableCell key={column}>{username}</TableCell>;
       default:

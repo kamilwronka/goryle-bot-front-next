@@ -1,7 +1,7 @@
 import {
   Reservation,
   fetchReservationsData,
-} from "@/app/actions/fetch-reservations-data";
+} from "@/actions/fetch-reservations-data";
 import { ReservationsTable } from "@/components/common/reservations-table";
 import { AppNavigation } from "@/components/layout/app-navigation";
 import { Metadata } from "next";

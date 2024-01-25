@@ -1,7 +1,8 @@
 "use server";
 
-import { getServerSessionWithConfig } from "@/lib/get-server-session-with-config";
-import mongoClient from "@/lib/mongodb";
+import connectDB from "@/lib/db/mongo";
+import { getServerSessionWithConfig } from "@/lib/auth/get-server-session-with-config";
+import { ReservationModel } from "@/models/reservation";
 import { ObjectId } from "mongodb";
 
 export async function deleteReservation(id: string): Promise<string> {
@@ -12,11 +13,9 @@ export async function deleteReservation(id: string): Promise<string> {
       throw new Error("No session");
     }
 
-    const client = await mongoClient;
-    const db = await client.db("goryle-bot");
-    const collection = await db.collection("expreservations");
+    await connectDB();
 
-    const result = await collection.deleteOne({
+    const result = await ReservationModel.deleteOne({
       _id: new ObjectId(id),
       userId: session?.user?.id,
     });

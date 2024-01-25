@@ -1,9 +1,15 @@
-import { ELIGIBLE_GUILDS } from "@/app/config/eligible-guilds";
-import { getServerSessionWithConfig } from "@/lib/get-server-session-with-config";
+"use server";
+
+import { ELIGIBLE_GUILDS } from "@/config/eligible-guilds";
+import { getServerSessionWithConfig } from "@/lib/auth/get-server-session-with-config";
 import { REST } from "@discordjs/rest";
 import { Routes, APIGuild } from "discord-api-types/v10";
 
-export const fetchEligibleUserGuilds = async (): Promise<APIGuild[]> => {
+export const fetchUserGuilds = async ({
+  eligible = false,
+}: {
+  eligible?: boolean;
+}): Promise<APIGuild[]> => {
   const session = await getServerSessionWithConfig();
 
   if (!session) {
@@ -16,6 +22,9 @@ export const fetchEligibleUserGuilds = async (): Promise<APIGuild[]> => {
 
   try {
     const response = (await rest.get(Routes.userGuilds())) as APIGuild[];
+
+    if (!eligible) return response;
+
     const eligibleGuilds = response.filter((guild: APIGuild) => {
       return ELIGIBLE_GUILDS.includes(guild.id);
     });
