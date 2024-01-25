@@ -1,9 +1,7 @@
-import {
-  Reservation,
-  fetchReservationsData,
-} from "@/actions/fetch-reservations-data";
+import { fetchReservationsData } from "@/actions/fetch-reservations-data";
 import { ReservationsTab } from "@/app/guilds/[id]/components/reservations-tab";
 import { AppNavigation } from "@/components/layout/app-navigation";
+import { Reservation } from "@/models/reservation";
 import { Metadata } from "next";
 
 type PageProps = {

@@ -1,9 +1,7 @@
-import {
-  Reservation,
-  fetchReservationsData,
-} from "@/actions/fetch-reservations-data";
+import { fetchReservationsData } from "@/actions/fetch-reservations-data";
 import { ReservationsTable } from "@/components/common/reservations-table";
 import { AppNavigation } from "@/components/layout/app-navigation";
+import { Reservation } from "@/models/reservation";
 import { Metadata } from "next";
 
 type Params = {
