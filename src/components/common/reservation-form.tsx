@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import {
   Command,
   CommandEmpty,
@@ -72,7 +72,8 @@ const EXP = [
 ];
 
 export const ReservationForm: React.FC<Props> = ({ onCancel }) => {
-  const { mutate: reservationMutate } = useCreateReservation();
+  const { mutate: reservationMutate, isPending: reservationMutatePending } =
+    useCreateReservation();
   const { data: eligibleGuilds } = useEligibleGuilds();
   const { toast } = useToast();
   const {
@@ -387,7 +388,12 @@ export const ReservationForm: React.FC<Props> = ({ onCancel }) => {
             </Button>
             {state.mode === "edit" && <Button type="submit">Edytuj</Button>}
             {state.mode === "create" && (
-              <Button type="submit">Zarezerwuj</Button>
+              <Button disabled={reservationMutatePending} type="submit">
+                {reservationMutatePending && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Zarezerwuj
+              </Button>
             )}
           </div>
         </form>
