@@ -3,7 +3,7 @@ import { InferSchemaType, Schema, model, models } from "mongoose";
 export const guildSchema = new Schema(
   {
     guildId: { type: String, required: true },
-    roles: { type: Array, required: true },
+    roleId: { type: String, required: true },
   },
   { toJSON: { virtuals: true } }
 );

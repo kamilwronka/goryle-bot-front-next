@@ -11,9 +11,7 @@ import { Guild, GuildModel } from "@/models/guild";
 //   "1150181160408862750",
 // ];
 
-export async function createGuild(data: Guild): Promise<string> {
-  console.log(data);
-
+export async function createGuild(data: Omit<Guild, "_id">): Promise<string> {
   try {
     const session = await getServerSessionWithConfig();
 
@@ -31,7 +29,7 @@ export async function createGuild(data: Guild): Promise<string> {
     await connectDB();
 
     const guild = new GuildModel<Omit<Guild, "_id">>({
-      roles: data.roles,
+      roleId: data.roleId,
       guildId: data.guildId,
     });
 

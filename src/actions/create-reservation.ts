@@ -9,11 +9,12 @@ const eligibleRoles = [
   "1150473111062454524",
   "1150176778204233901",
   "1150181160408862750",
+  "1198939637402579004",
 ];
 
-export async function createReservation(data: Reservation): Promise<string> {
-  console.log(data);
-
+export async function createReservation(
+  data: Omit<Reservation, "_id">
+): Promise<string> {
   try {
     const session = await getServerSessionWithConfig();
 

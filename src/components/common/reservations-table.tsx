@@ -11,37 +11,36 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useToast } from "@/components/ui/use-toast";
+import { useDeleteReservation } from "@/hooks/api/use-delete-reservation";
 import { cn } from "@/lib/utils";
 import { Reservation } from "@/models/reservation";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
 
 type Column = "discord" | "exp" | "from" | "to" | "purpose" | "username";
 
 type Props = {
-  reservations: Reservation[];
+  reservations?: Reservation[];
   columns: Column[];
   highlightOwnRecords: boolean;
 };
 
 export const ReservationsTable: React.FC<Props> = ({
-  reservations,
+  reservations = [],
   columns,
   highlightOwnRecords = false,
 }) => {
+  const { toast } = useToast();
   const { data: session } = useSession();
-  const [optimisticReservations, setOptimisticReservations] =
-    useState<Reservation[]>(reservations);
+  const { mutate: deleteReservationMutate } = useDeleteReservation();
 
   const handleReservationDelete = async (id: string) => {
-    setOptimisticReservations((prev) => {
-      return prev.filter((reservation) => reservation._id !== id);
+    deleteReservationMutate(id, {
+      onSuccess: () => {
+        toast({ title: "Rezerwacja została usunięta" });
+      },
     });
-
-    await deleteReservation(id);
   };
-
-  console.log(reservations);
 
   const renderHead = (column: Column) => {
     switch (column) {
@@ -116,15 +115,15 @@ export const ReservationsTable: React.FC<Props> = ({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {optimisticReservations.length === 0 && (
+        {reservations.length === 0 && (
           <TableRow>
             <TableCell colSpan={7} className="text-center">
               Brak rezerwacji
             </TableCell>
           </TableRow>
         )}
-        {optimisticReservations.length > 0 &&
-          optimisticReservations.map((reservation) => {
+        {reservations.length > 0 &&
+          reservations.map((reservation) => {
             return (
               <TableRow
                 key={reservation._id}
@@ -140,7 +139,7 @@ export const ReservationsTable: React.FC<Props> = ({
                   {/* @ts-ignore */}
                   {session?.user.id === reservation.userId && (
                     <>
-                      <EditReservationButton id={reservation._id} />
+                      <EditReservationButton data={reservation} />
                       <DeleteReservationButton
                         id={reservation._id}
                         onDelete={handleReservationDelete}

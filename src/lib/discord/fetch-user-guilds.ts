@@ -1,7 +1,8 @@
 "use server";
 
-import { ELIGIBLE_GUILDS } from "@/config/eligible-guilds";
+import { fetchGuilds } from "@/actions/fetch-guilds";
 import { getServerSessionWithConfig } from "@/lib/auth/get-server-session-with-config";
+import { Guild } from "@/models/guild";
 import { REST } from "@discordjs/rest";
 import { Routes, APIGuild } from "discord-api-types/v10";
 
@@ -25,11 +26,17 @@ export const fetchUserGuilds = async ({
 
     if (!eligible) return response;
 
-    const eligibleGuilds = response.filter((guild: APIGuild) => {
-      return ELIGIBLE_GUILDS.includes(guild.id);
+    const eligibleGuilds = JSON.parse(
+      await fetchGuilds(response.map((guild) => guild.id))
+    ) as Guild[];
+
+    const mappedGuilds = response.filter((guild: APIGuild) => {
+      return !!eligibleGuilds.find(
+        (eligibleGuild) => eligibleGuild.guildId === guild.id
+      );
     });
 
-    return eligibleGuilds;
+    return mappedGuilds;
   } catch (error) {
     console.error(error);
     throw new Error("Failed to fetch user guilds");

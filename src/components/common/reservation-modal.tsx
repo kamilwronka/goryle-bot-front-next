@@ -26,8 +26,6 @@ export const ReservationModal = () => {
   } = useGlobalContext();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  console.log(isDesktop, state.isOpen);
-
   const handleClose = () => {
     dispatch({ type: "CLOSE" });
   };

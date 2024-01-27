@@ -10,12 +10,10 @@ import { Reservation } from "@/models/reservation";
 import { fetchUserGuilds } from "@/lib/discord/fetch-user-guilds";
 import { AddGuildCard } from "@/features/main-page/components/add-guild-card";
 import { UserGuilds } from "@/features/main-page/components/user-guilds";
+import { UserReservations } from "@/features/main-page/components/user-reservations";
 
 export const MainPage = async () => {
   const session = await getServerSessionWithConfig();
-
-  const reservations = await fetchUserReservations(session?.user?.id as string);
-  const parsedReservations = JSON.parse(reservations) as Reservation[];
 
   return (
     <main>
@@ -24,16 +22,7 @@ export const MainPage = async () => {
         {session && (
           <>
             <UserGuilds />
-            <section className="p-8">
-              <h2 className="scroll-m-20 text-xl font-extrabold tracking-tight lg:text-xl">
-                Twoje rezerwacje
-              </h2>
-              <ReservationsTable
-                reservations={parsedReservations}
-                columns={["discord", "exp", "from", "to", "purpose"]}
-                highlightOwnRecords={false}
-              />
-            </section>
+            <UserReservations />
           </>
         )}
         {!session && (

@@ -28,7 +28,9 @@ import {
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useEligibleGuilds } from "@/hooks/api/use-eligible-guilds";
+import { useCreateGuild } from "@/hooks/api/use-create-guild";
+import { useAllGuilds } from "@/hooks/api/use-all-guilds";
+import { useToast } from "@/components/ui/use-toast";
 
 type Props = {
   onCancel: () => void;
@@ -40,7 +42,9 @@ const formSchema = z.object({
 });
 
 export const GuildForm: React.FC<Props> = ({ onCancel }) => {
-  const { data: eligibleGuilds } = useEligibleGuilds();
+  const { data: allGuilds } = useAllGuilds();
+  const { mutate: mutateGuilds } = useCreateGuild();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,11 +54,19 @@ export const GuildForm: React.FC<Props> = ({ onCancel }) => {
   });
 
   async function onSubmit({ roleId, guildId }: z.infer<typeof formSchema>) {
-    console.log(roleId, guildId);
+    mutateGuilds(
+      { roleId, guildId },
+      {
+        onSuccess: () => {
+          toast({ title: "Dodano rezerwację" });
+          onCancel();
+        },
+      }
+    );
   }
 
   const mappedGuilds =
-    eligibleGuilds?.map((item) => ({
+    allGuilds?.map((item) => ({
       label: item.name,
       value: item.id,
     })) || [];

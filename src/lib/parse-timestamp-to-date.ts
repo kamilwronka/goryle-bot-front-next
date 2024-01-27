@@ -1,8 +1,9 @@
 import { format } from "date-fns";
-import { utcToZonedTime } from "date-fns-tz";
 
-export const parseTimestampToDate = (date: number) => {
-  const utcDate = utcToZonedTime(date, "Etc/UTC");
+export const parseTimestampToDate = (date?: number) => {
+  if (!date) {
+    return "N/A";
+  }
 
-  return format(utcDate, "dd.MM.yyyy - HH:mm");
+  return format(date, "dd.MM.yyyy - HH:mm");
 };

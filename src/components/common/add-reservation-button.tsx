@@ -7,7 +7,6 @@ export const AddReservationButton: React.FC = () => {
   } = useGlobalContext();
 
   const handleModalOpen = () => {
-    console.log("handleModalOpen");
     dispatch({ type: "OPEN_CREATE" });
   };
 

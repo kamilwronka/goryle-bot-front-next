@@ -1,3 +1,5 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -33,10 +35,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { MAXIMUM_NUMBER_OF_DAYS_AHEAD } from "@/config/reservations";
-import { fetchUserGuilds } from "@/lib/discord/fetch-user-guilds";
-import { useEffect, useState } from "react";
-import { createReservation } from "@/actions/create-reservation";
 import { Reservation } from "@/models/reservation";
+import { useCreateReservation } from "@/hooks/api/use-create-reservation";
+import { useEligibleGuilds } from "@/hooks/api/use-eligible-guilds";
+import { useToast } from "@/components/ui/use-toast";
+import { useGlobalContext } from "@/hooks/use-global-context";
+import { parseTimestampToDateAndTime } from "@/lib/date/utils";
 
 type Props = {
   onCancel: () => void;
@@ -68,25 +72,34 @@ const EXP = [
 ];
 
 export const ReservationForm: React.FC<Props> = ({ onCancel }) => {
-  const [guilds, setGuilds] = useState<{ label: string; value: string }[]>([]);
+  const { mutate: reservationMutate } = useCreateReservation();
+  const { data: eligibleGuilds } = useEligibleGuilds();
+  const { toast } = useToast();
+  const {
+    reservationsModal: { state },
+  } = useGlobalContext();
+
+  const { date: dateFrom, time: timeFrom } = parseTimestampToDateAndTime(
+    state.reservation?.dateFrom
+  );
+  const { date: dateTo, time: timeTo } = parseTimestampToDateAndTime(
+    state.reservation?.dateTo
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      timeFrom: "",
-      timeTo: "",
+      date: {
+        from: dateFrom,
+        to: dateTo,
+      },
+      timeFrom: timeFrom,
+      timeTo: timeTo,
+      purpose: state.reservation?.purpose || "",
+      guildId: state.reservation?.guildId || "",
+      exp: state.reservation?.exp || "",
     },
   });
-
-  useEffect(() => {
-    fetchUserGuilds({ eligible: true }).then((guilds) => {
-      const parsedGuilds = guilds.map((guild) => ({
-        label: guild.name,
-        value: guild.id,
-      }));
-      setGuilds(parsedGuilds);
-    });
-  }, []);
 
   async function onSubmit({
     date,
@@ -118,10 +131,22 @@ export const ReservationForm: React.FC<Props> = ({ onCancel }) => {
       guildId,
     };
 
-    await createReservation(payload as Reservation);
-
-    console.log(payload);
+    reservationMutate(payload as Reservation, {
+      onSuccess: () => {
+        onCancel();
+        toast({
+          title: "Dodano rezerwację",
+          variant: "default",
+        });
+      },
+    });
   }
+
+  const mappedGuilds =
+    eligibleGuilds?.map((item) => ({
+      label: item.name,
+      value: item.id,
+    })) || [];
 
   return (
     <Form {...form}>
@@ -149,8 +174,9 @@ export const ReservationForm: React.FC<Props> = ({ onCancel }) => {
                         )}
                       >
                         {field.value
-                          ? guilds.find((item) => item.value === field.value)
-                              ?.label
+                          ? mappedGuilds.find(
+                              (item) => item.value === field.value
+                            )?.label
                           : "Wybierz server"}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
@@ -161,7 +187,7 @@ export const ReservationForm: React.FC<Props> = ({ onCancel }) => {
                       <CommandInput placeholder="Szukaj..." />
                       <CommandEmpty>Nie znaleziono.</CommandEmpty>
                       <CommandGroup className="w-full">
-                        {guilds.map((item) => (
+                        {mappedGuilds.map((item) => (
                           <CommandItem
                             value={item.label}
                             key={item.value}
@@ -359,7 +385,10 @@ export const ReservationForm: React.FC<Props> = ({ onCancel }) => {
             <Button variant="outline" type="button" onClick={onCancel}>
               Anuluj
             </Button>
-            <Button type="submit">Zarezerwuj</Button>
+            {state.mode === "edit" && <Button type="submit">Edytuj</Button>}
+            {state.mode === "create" && (
+              <Button type="submit">Zarezerwuj</Button>
+            )}
           </div>
         </form>
       </div>
