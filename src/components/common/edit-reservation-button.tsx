@@ -14,7 +14,8 @@ export const EditReservationButton: React.FC<Props> = ({ data }) => {
     reservationsModal: { dispatch },
   } = useGlobalContext();
 
-  const handleModalOpen = () => {
+  const handleModalOpen = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
     dispatch({ type: "OPEN_EDIT", payload: data });
   };
 

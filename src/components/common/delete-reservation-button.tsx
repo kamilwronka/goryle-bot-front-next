@@ -19,7 +19,7 @@ type Props = {
 };
 
 export const DeleteReservationButton: React.FC<Props> = ({ id, onDelete }) => {
-  const handleReservationDelete = async () => {
+  const handleReservationDelete = () => {
     onDelete(id);
   };
 

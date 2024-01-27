@@ -2,6 +2,7 @@
 
 import { DeleteReservationButton } from "@/components/common/delete-reservation-button";
 import { EditReservationButton } from "@/components/common/edit-reservation-button";
+import { NavigateToReservationsButton } from "@/components/common/navigate-to-reservations-button";
 import {
   Table,
   TableBody,
@@ -17,7 +18,6 @@ import { parseTimestampToDate } from "@/lib/parse-timestamp-to-date";
 import { cn } from "@/lib/utils";
 import { Reservation } from "@/models/reservation";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 type Column = "discord" | "exp" | "from" | "to" | "purpose" | "username";
 
@@ -25,20 +25,17 @@ type Props = {
   reservations?: Reservation[];
   columns: Column[];
   highlightOwnRecords: boolean;
-  enableNavigation?: boolean;
 };
 
 export const ReservationsTable: React.FC<Props> = ({
   reservations = [],
   columns,
   highlightOwnRecords = false,
-  enableNavigation = false,
 }) => {
   const { toast } = useToast();
   const { data: session } = useSession();
   const { mutate: deleteReservationMutate } = useDeleteReservation();
   const { data: eligibleGuilds } = useEligibleGuilds();
-  const router = useRouter();
 
   const handleReservationDelete = async (id: string) => {
     deleteReservationMutate(id, {
@@ -46,13 +43,6 @@ export const ReservationsTable: React.FC<Props> = ({
         toast({ title: "Rezerwacja została usunięta" });
       },
     });
-  };
-
-  const handleNavigate = (reservation: Reservation) => {
-    enableNavigation &&
-      router.push(
-        `/guilds/${reservation.guildId}/exp/${reservation.exp}#reservation-${reservation._id}`
-      );
   };
 
   const renderHead = (column: Column) => {
@@ -148,9 +138,7 @@ export const ReservationsTable: React.FC<Props> = ({
                     // @ts-ignore
                     session?.user.id === reservation.userId &&
                     highlightOwnRecords,
-                  "cursor-pointer": enableNavigation,
                 })}
-                onClick={() => handleNavigate(reservation)}
                 id={`reservation-${reservation._id}`}
               >
                 {columns.map((column) => renderRow(column, reservation))}
@@ -158,6 +146,7 @@ export const ReservationsTable: React.FC<Props> = ({
                   {/* @ts-ignore */}
                   {session?.user.id === reservation.userId && (
                     <>
+                      <NavigateToReservationsButton reservation={reservation} />
                       <EditReservationButton data={reservation} />
                       <DeleteReservationButton
                         id={reservation._id}

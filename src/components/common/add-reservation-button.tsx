@@ -6,7 +6,8 @@ export const AddReservationButton: React.FC = () => {
     reservationsModal: { dispatch, state },
   } = useGlobalContext();
 
-  const handleModalOpen = () => {
+  const handleModalOpen = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
     dispatch({ type: "OPEN_CREATE" });
   };
 
