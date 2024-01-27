@@ -15,6 +15,7 @@ export const UserReservations: React.FC = () => {
         reservations={reservations}
         columns={["discord", "exp", "from", "to", "purpose"]}
         highlightOwnRecords={false}
+        enableNavigation
       />
     </section>
   );
