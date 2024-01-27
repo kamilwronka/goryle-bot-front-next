@@ -16,8 +16,10 @@ export const fetchGuildMember = async (
   );
 
   try {
-    return (await rest.get(Routes.userGuildMember(guildId))) as APIGuildMember;
+    const response = await rest.get(Routes.userGuildMember(guildId));
+    return response as APIGuildMember;
   } catch (error) {
+    console.log(JSON.stringify(error));
     throw new Error("Failed to fetch guild member from discord");
   }
 };
