@@ -10,7 +10,7 @@ export const authOptions: NextAuthOptions = {
       userinfo: "https://discord.com/api/users/@me",
       authorization: {
         params: {
-          scope: "identify email guilds",
+          scope: "identify email guilds guilds.members.read",
         },
       },
     }),
