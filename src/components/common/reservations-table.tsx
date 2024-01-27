@@ -3,6 +3,7 @@
 import { DeleteReservationButton } from "@/components/common/delete-reservation-button";
 import { EditReservationButton } from "@/components/common/edit-reservation-button";
 import { NavigateToReservationsButton } from "@/components/common/navigate-to-reservations-button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -25,12 +26,14 @@ type Props = {
   reservations?: Reservation[];
   columns: Column[];
   highlightOwnRecords: boolean;
+  isLoading?: boolean;
 };
 
 export const ReservationsTable: React.FC<Props> = ({
   reservations = [],
   columns,
   highlightOwnRecords = false,
+  isLoading = false,
 }) => {
   const { toast } = useToast();
   const { data: session } = useSession();
@@ -49,13 +52,13 @@ export const ReservationsTable: React.FC<Props> = ({
     switch (column) {
       case "discord":
         return (
-          <TableHead key={column} className="w-36 min-w-24">
+          <TableHead key={column} className="w-36 min-w-36">
             Discord
           </TableHead>
         );
       case "exp":
         return (
-          <TableHead key={column} className="w-36 min-w-24">
+          <TableHead key={column} className="w-36 min-w-36">
             Exp
           </TableHead>
         );
@@ -121,9 +124,26 @@ export const ReservationsTable: React.FC<Props> = ({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {reservations.length === 0 && (
+        {isLoading &&
+          Array.from({ length: 3 }).map((_, i) => {
+            return (
+              <TableRow key={i}>
+                {columns.map((column) => {
+                  return (
+                    <TableCell key={column} className="text-center h-[72px]">
+                      <Skeleton className="w-24 h-4" />
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            );
+          })}
+        {!isLoading && reservations.length === 0 && (
           <TableRow>
-            <TableCell colSpan={7} className="text-center h-[72px]">
+            <TableCell
+              colSpan={columns.length}
+              className="text-center h-[72px]"
+            >
               Brak rezerwacji
             </TableCell>
           </TableRow>

@@ -10,7 +10,11 @@ type Props = {
 
 export const GuildReservations: React.FC<Props> = ({ exp, id }) => {
   const expName = decodeURIComponent(exp);
-  const { data: guildReservations } = useGuildReservations(id, expName);
+  const {
+    data: guildReservations,
+    isLoading,
+    isFetched,
+  } = useGuildReservations(id, expName);
 
   return (
     <div className="row p-8 w-full max-w-screen-2xl flex flex-col">
@@ -24,6 +28,7 @@ export const GuildReservations: React.FC<Props> = ({ exp, id }) => {
           reservations={guildReservations}
           columns={["username", "from", "to", "purpose"]}
           highlightOwnRecords
+          isLoading={isLoading && !isFetched}
         />
       </div>
     </div>

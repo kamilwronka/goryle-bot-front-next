@@ -4,7 +4,7 @@ import { ReservationsTable } from "@/components/common/reservations-table";
 import { useUserReservations } from "@/hooks/api/use-user-reservations";
 
 export const UserReservations: React.FC = () => {
-  const { data: reservations } = useUserReservations();
+  const { data: reservations, isLoading, isFetched } = useUserReservations();
 
   return (
     <section className="p-8">
@@ -15,6 +15,7 @@ export const UserReservations: React.FC = () => {
         reservations={reservations}
         columns={["discord", "exp", "from", "to", "purpose"]}
         highlightOwnRecords={false}
+        isLoading={isLoading && !isFetched}
       />
     </section>
   );
