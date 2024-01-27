@@ -26,9 +26,13 @@ export const fetchUserGuilds = async ({
 
     if (!eligible) return response;
 
+    console.log(JSON.stringify(response));
+
     const eligibleGuilds = JSON.parse(
       await fetchGuilds(response.map((guild) => guild.id))
     ) as Guild[];
+
+    console.log(JSON.stringify(eligibleGuilds));
 
     const mappedGuilds = response.filter((guild: APIGuild) => {
       return !!eligibleGuilds.find(
@@ -39,6 +43,6 @@ export const fetchUserGuilds = async ({
     return mappedGuilds;
   } catch (error) {
     console.error(error);
-    throw new Error("Failed to fetch user guilds");
+    throw new Error("Failed to fetch user guilds from mongo");
   }
 };
